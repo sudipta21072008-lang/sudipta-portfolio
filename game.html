@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOM — THE HOUSE REMEMBERS</title>
+
+<style>
+
+/* ================= RESET ================= */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+/* ================= BASE ================= */
+body{
+height:100vh;
+overflow:hidden;
+background:black;
+font-family:Arial;
+color:white;
+transition:0.2s;
+}
+
+/* ================= BACKGROUND ================= */
+#bg{
+position:fixed;
+inset:0;
+background:url("https://i.imgur.com/3ZQ3ZQm.jpg");
+background-size:cover;
+filter:brightness(0.08) contrast(1.4);
+z-index:-2;
+animation:slowShake 8s infinite;
+}
+
+@keyframes slowShake{
+0%,100%{transform:translate(0,0);}
+25%{transform:translate(1px,-1px);}
+50%{transform:translate(-1px,1px);}
+75%{transform:translate(1px,1px);}
+}
+
+/* ================= NOISE ================= */
+#noise{
+position:fixed;
+inset:0;
+background:url("https://grainy-gradients.vercel.app/noise.svg");
+opacity:0.06;
+z-index:-1;
+animation:flicker 0.15s infinite;
+}
+
+@keyframes flicker{
+0%{opacity:0.03;}
+50%{opacity:0.08;}
+100%{opacity:0.05;}
+}
+
+/* ================= SCREEN SYSTEM ================= */
+.screen{
+position:absolute;
+inset:0;
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:20px;
+height:100vh;
+overflow:hidden;
+}
+
+/* ================= MENU ================= */
+#menu h1{
+font-size:54px;
+color:red;
+text-shadow:0 0 25px red;
+animation:glitch 1s infinite;
+}
+
+@keyframes glitch{
+0%{transform:translate(0,0);}
+25%{transform:translate(2px,-2px);}
+50%{transform:translate(-2px,2px);}
+75%{transform:translate(1px,1px);}
+100%{transform:translate(0,0);}
+}
+
+/* ================= GAME UI ================= */
+#container{
+display:flex;
+flex-direction:column;
+align-items:center;
+justify-content:center;
+max-width:700px;
+}
+
+#title{
+color:red;
+font-size:26px;
+margin-bottom:10px;
+text-shadow:0 0 10px red;
+}
+
+#story{
+max-width:600px;
+color:#bbb;
+min-height:90px;
+margin-bottom:20px;
+line-height:1.4;
+}
+
+#choices{
+display:flex;
+flex-direction:column;
+gap:10px;
+max-height:300px;
+overflow:auto;
+padding:10px;
+}
+
+/* ================= BUTTONS ================= */
+button{
+width:300px;
+padding:12px;
+background:black;
+border:2px solid red;
+color:white;
+cursor:pointer;
+transition:0.1s;
+}
+
+button:hover{
+transform:scale(1.05);
+box-shadow:0 0 20px red;
+}
+
+/* ================= EFFECTS ================= */
+.flash{animation:flash 0.12s;}
+@keyframes flash{50%{opacity:0.2;}}
+
+.glitch{
+animation:glitch2 0.25s infinite;
+}
+
+@keyframes glitch2{
+0%{transform:translate(0,0);}
+25%{transform:translate(2px,-2px);}
+50%{transform:translate(-2px,2px);}
+75%{transform:translate(1px,1px);}
+100%{transform:translate(0,0);}
+}
+
+.invert{
+filter:invert(1) hue-rotate(180deg);
+}
+
+</style>
+</head>
+
+<body>
+
+<div id="bg"></div>
+<div id="noise"></div>
+
+<!-- MENU -->
+<div id="menu" class="screen">
+<h1>MOM…?</h1>
+<p style="color:#aaa;max-width:500px;">
+She disappeared last year. But tonight… she called your name again.
+</p>
+<button onclick="startGame()">START</button>
+</div>
+
+<!-- GAME -->
+<div id="game" class="screen" style="display:none;">
+<div id="container">
+<h1 id="title"></h1>
+<p id="story"></p>
+<div id="choices"></div>
+</div>
+</div>
+
+<!-- END -->
+<div id="end" class="screen" style="display:none;">
+<h1 id="endTitle"></h1>
+<p id="endText"></p>
+<div id="endChoices"></div>
+</div>
+
+<script>
+
+/* ================= AUDIO ================= */
+let audio;
+
+function initAudio(){
+audio = new (window.AudioContext || window.webkitAudioContext)();
+ambient();
+}
+
+function ambient(){
+let o=audio.createOscillator();
+let g=audio.createGain();
+
+o.type="sine";
+o.frequency.value=38;
+g.gain.value=0.03;
+
+o.connect(g);
+g.connect(audio.destination);
+
+o.start();
+o.stop(audio.currentTime+3);
+
+setTimeout(ambient,2500);
+}
+
+function clickSound(){
+let o=audio.createOscillator();
+let g=audio.createGain();
+
+o.frequency.value=650;
+g.gain.value=0.06;
+
+o.connect(g);
+g.connect(audio.destination);
+
+o.start();
+o.stop(audio.currentTime+0.05);
+}
+
+function scream(){
+let o=audio.createOscillator();
+let g=audio.createGain();
+
+o.type="sawtooth";
+o.frequency.value=1200;
+
+g.gain.setValueAtTime(0.4,audio.currentTime);
+g.gain.exponentialRampToValueAtTime(0.001,audio.currentTime+0.25);
+
+o.connect(g);
+g.connect(audio.destination);
+
+o.start();
+o.stop(audio.currentTime+0.25);
+}
+
+/* ================= STATE ================= */
+let level=0;
+let sanity=0;
+
+/* ================= START ================= */
+function startGame(){
+
+initAudio();
+
+document.getElementById("menu").style.display="none";
+document.getElementById("end").style.display="none";
+document.getElementById("game").style.display="flex";
+
+level=0;
+next();
+}
+
+/* ================= MENU RESET ================= */
+function goMenu(){
+document.getElementById("game").style.display="none";
+document.getElementById("end").style.display="none";
+document.getElementById("menu").style.display="flex";
+}
+
+/* ================= ENGINE ================= */
+function next(){
+
+let t=document.getElementById("title");
+let s=document.getElementById("story");
+let c=document.getElementById("choices");
+
+c.innerHTML="";
+
+if(level===0){
+t.innerText="Your Room";
+s.innerText="Mom is calling you… but she died in your memory.";
+
+add("Mom..? Did you call me?",1);
+add("Stay silent and listen",2);
+}
+
+else if(level===1){
+t.innerText="Hallway / Kitchen Split";
+s.innerText="Her voice comes from two places at once.";
+
+add("Go to hallway",3);
+add("Go to kitchen",4);
+}
+
+else if(level===2){
+t.innerText="Silence Loop";
+s.innerText="The house waits for your reaction.";
+
+add("Open door",1);
+add("Wait longer",3);
+}
+
+else if(level===3){
+t.innerText="Hallway";
+s.innerText="A figure stands still… shaped like Mom.";
+
+add("Walk toward it",5);
+add("Run back",0);
+}
+
+else if(level===4){
+t.innerText="Kitchen";
+s.innerText="Table is set for two. One seat is still warm.";
+
+add("Call Mom",6);
+add("Touch stove",7);
+}
+
+else if(level===5){
+scream();
+document.body.classList.add("flash");
+
+t.innerText="DISTORTION";
+s.innerText="It only moves when you acknowledge it.";
+
+add("Close eyes",8);
+add("Stare",9);
+}
+
+else if(level===6){
+t.innerText="Kitchen Whisper";
+s.innerText="A voice answers behind you.";
+
+add("Turn slowly",10);
+add("Ignore it",8);
+}
+
+else if(level===7){
+t.innerText="Heat Memory";
+s.innerText="The flame reacts like it remembers you.";
+
+add("Step away",10);
+add("Watch flame",9);
+}
+
+else if(level===8){
+t.innerText="Reset Feeling";
+s.innerText="This already happened… didn’t it?";
+
+add("Continue",1);
+add("Resist memory",9);
+}
+
+else if(level===9){
+document.body.classList.add("glitch");
+scream();
+
+t.innerText="BEHIND YOU";
+s.innerText="You were never alone.";
+
+add("Turn",10);
+add("Freeze",10);
+}
+
+else if(level===10){
+t.innerText="Memory Fracture";
+s.innerText="You remember: kitchen. argument. silence.";
+
+add("Accept truth",11);
+add("Reject memory",12);
+}
+
+else if(level===11){
+ending("truth");
+}
+
+else if(level===12){
+ending("loop");
+}
+
+}
+
+/* ================= BUTTON ================= */
+function add(text,nextLevel){
+
+let b=document.createElement("button");
+b.innerText=text;
+
+b.onclick=()=>{
+
+clickSound();
+sanity++;
+
+if(sanity>4) document.body.classList.add("invert");
+
+level=nextLevel;
+next();
+
+};
+
+c=document.getElementById("choices");
+c.appendChild(b);
+
+}
+
+/* ================= ENDINGS ================= */
+function ending(type){
+
+document.getElementById("game").style.display="none";
+document.getElementById("end").style.display="flex";
+
+let t=document.getElementById("endTitle");
+let s=document.getElementById("endText");
+let c=document.getElementById("endChoices");
+
+c.innerHTML="";
+
+if(type==="truth"){
+t.innerText="TRUTH ENDING";
+s.innerText="Mom never left the kitchen that night… and you remember why.";
+
+addEnd("Back to Menu", goMenu);
+addEnd("Relive Memory", startGame);
+}
+
+else if(type==="loop"){
+t.innerText="LOOP ENDING";
+s.innerText="The house resets again… waiting for you.";
+
+addEnd("Try Again", startGame);
+addEnd("Leave", goMenu);
+}
+
+}
+
+function addEnd(text,fn){
+let b=document.createElement("button");
+b.innerText=text;
+b.onclick=fn;
+document.getElementById("endChoices").appendChild(b);
+}
+
+</script>
+
+</body>
+</html>
