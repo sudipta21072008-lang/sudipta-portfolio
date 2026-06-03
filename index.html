@@ -1,164 +1,268 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sudipta | Portfolio</title>
+<title>Sudipta | Science Portfolio</title>
 
 <style>
-/* THEME VARIABLES */
-:root {
-    --bg: linear-gradient(135deg, #667eea, #764ba2);
-    --card: white;
-    --text: black;
-    --nav: rgba(0,0,0,0.3);
-    --btn: #4f46e5;
+body{
+margin:0;
+font-family:Arial;
+background:radial-gradient(circle at top,#0b1026,#000);
+color:white;
+overflow:hidden;
 }
 
-/* DARK MODE */
-.dark {
-    --bg: #0f172a;
-    --card: #1e293b;
-    --text: white;
-    --nav: rgba(255,255,255,0.1);
-    --btn: #6366f1;
+/* ================= BACKGROUND ================= */
+#bg{
+position:fixed;
+inset:0;
+z-index:-2;
+background:radial-gradient(circle at center,#0b1026,#000);
 }
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    transition: 0.3s;
+/* floating particles */
+.particle{
+position:fixed;
+width:3px;
+height:3px;
+background:rgba(255,255,255,0.6);
+border-radius:50%;
+animation:float 12s linear infinite;
 }
 
-/* NAVBAR */
-nav {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    padding: 15px;
-    background: var(--nav);
-    position: sticky;
-    top: 0;
-    align-items: center;
+@keyframes float{
+0%{transform:translateY(100vh);}
+100%{transform:translateY(-100vh);}
 }
 
-nav a {
-    color: white;
-    text-decoration: none;
-    font-weight: bold;
+/* ================= PAGES ================= */
+.page{
+position:absolute;
+inset:0;
+display:none;
+align-items:center;
+justify-content:center;
+flex-direction:column;
+text-align:center;
+padding:20px;
 }
 
-/* SECTIONS */
-section {
-    padding: 60px 20px;
-    text-align: center;
+.active{
+display:flex;
+animation:fade 0.5s ease;
 }
 
-/* CARD */
-.card {
-    background: var(--card);
-    color: var(--text);
-    max-width: 700px;
-    margin: auto;
-    padding: 30px;
-    border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+@keyframes fade{
+from{opacity:0; transform:translateY(10px);}
+to{opacity:1; transform:translateY(0);}
 }
 
-/* PROJECT */
-.project {
-    background: var(--card);
-    padding: 15px;
-    margin: 10px auto;
-    border-radius: 12px;
-    max-width: 400px;
+/* ================= AESTHETIC CARD ================= */
+.card{
+position:relative;
+background:rgba(255,255,255,0.06);
+backdrop-filter:blur(18px);
+border-radius:20px;
+padding:30px;
+max-width:750px;
+text-align:center;
+
+/* soft premium border */
+border:1px solid rgba(255,255,255,0.12);
+
+/* subtle glow depth */
+box-shadow:
+0 10px 40px rgba(0,0,0,0.5),
+inset 0 1px 0 rgba(255,255,255,0.08);
+
+transition:0.3s;
 }
 
-/* BUTTON */
-button {
-    background: var(--btn);
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: 0.3s;
+/* elegant border highlight */
+.card::before{
+content:"";
+position:absolute;
+inset:0;
+border-radius:20px;
+padding:1px;
+background:linear-gradient(
+45deg,
+rgba(255,79,163,0.4),
+rgba(124,131,255,0.3),
+rgba(155,255,176,0.3)
+);
+
+-webkit-mask:
+linear-gradient(#000 0 0) content-box,
+linear-gradient(#000 0 0);
+-webkit-mask-composite:xor;
+mask-composite:exclude;
+
+pointer-events:none;
 }
 
-button:hover {
-    transform: scale(1.05);
+/* hover depth */
+.card:hover{
+transform:translateY(-6px);
+box-shadow:
+0 15px 50px rgba(0,0,0,0.6);
 }
 
-/* DARK MODE BUTTON */
-.toggle {
-    position: absolute;
-    right: 20px;
+/* ================= TEXT ================= */
+h1{
+font-size:42px;
+margin-bottom:10px;
 }
+
+h2{
+color:#ff8fc7;
+letter-spacing:0.5px;
+}
+
+/* ================= BUTTON ================= */
+button{
+padding:12px 16px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.15);
+background:rgba(255,255,255,0.08);
+color:white;
+cursor:pointer;
+margin:6px;
+transition:0.2s;
+backdrop-filter:blur(10px);
+}
+
+button:hover{
+transform:scale(1.05);
+background:rgba(255,79,163,0.2);
+border:1px solid rgba(255,79,163,0.4);
+}
+
+/* ================= AUDIO ================= */
+audio{display:none;}
 </style>
-
 </head>
 
 <body>
 
-<!-- NAV -->
-<nav>
-    <a href="#home">Home</a>
-    <a href="#about">About</a>
-    <a href="#projects">Projects</a>
-    <a href="#contact">Contact</a>
+<div id="bg"></div>
 
-    <button class="toggle" onclick="toggleDark()">🌙</button>
-</nav>
-
-<!-- HOME -->
-<section id="home">
-    <h1>Hi, I'm Sudipta 👋</h1>
-    <p>Bioinformatics & Computational Biology Aspirant</p>
-</section>
-
-<!-- ABOUT -->
-<section id="about">
-    <div class="card">
-        <h2>About Me</h2>
-        <p>
-            I'm passionate about science, research, and technology.
-            I aim to become a scientist in Bioinformatics and contribute to real-world discoveries.
-        </p>
-    </div>
-</section>
-
-<!-- PROJECTS -->
-<section id="projects">
-    <h2>Projects</h2>
-
-    <div class="project">
-        <h3>🧪 Bio Quiz Project</h3>
-        <a href="BIOQUIZ.html"><button>View</button></a>
-    </div>
-
-    <div class="project">
-        <h3>⚡ Genesis V1</h3>
-        <a href="genesisv1.html"><button>View</button></a>
-    </div>
-
-</section>
-
-<!-- CONTACT -->
-<section id="contact">
-    <h2>Contact</h2>
-    <p>Email: sudipta21072008@gmail.com</p>
-    <a href="mailto:sudipta21072008@gmail.com">
-        <button>Send Email</button>
-    </a>
-</section>
+<!-- AUDIO -->
+<audio id="bgm" loop>
+<source src="https://cdn.pixabay.com/audio/2023/03/01/audio_2b6a7b6d4d.mp3">
+</audio>
 
 <script>
-function toggleDark() {
-    document.body.classList.toggle("dark");
+/* particles */
+for(let i=0;i<30;i++){
+let p=document.createElement("div");
+p.className="particle";
+p.style.left=Math.random()*100+"vw";
+p.style.animationDuration=(5+Math.random()*8)+"s";
+document.body.appendChild(p);
 }
+</script>
+
+<!-- ================= HOME ================= -->
+<div class="page active" id="home">
+<div class="card">
+<h1>Hi, I'm Sudipta 👋</h1>
+<p>Zoology Undergraduate | Bioinformatics Explorer</p>
+<button onclick="openPage('about')">Enter Portfolio</button>
+</div>
+</div>
+
+<!-- ================= ABOUT ================= -->
+<div class="page" id="about">
+<div class="card">
+<h2>About Me</h2>
+<p>
+I am a Zoology undergraduate exploring the intersection of biology and computation.<br><br>
+I enjoy genetics, biological systems, and scientific problem solving.
+</p>
+
+<button onclick="openPage('achievements')">Next</button>
+</div>
+</div>
+
+<!-- ================= ACHIEVEMENTS ================= -->
+<div class="page" id="achievements">
+<div class="card">
+<h2>Achievements</h2>
+<p>
+~Shark Tank Winner<br>
+~10+ MUNs (USG roles + awards)<br>
+~Art & Craft Competitions<br>
+~Badminton Participation<br>
+~Published Physics/Cosmology Article<br>
+~Science Fair Project (Virtual Dressing Room)
+</p>
+
+<button onclick="openPage('projects')">Next</button>
+</div>
+</div>
+
+<!-- ================= PROJECTS ================= -->
+<div class="page" id="projects">
+<div class="card">
+<h2>Projects</h2>
+
+<button onclick="openExternal('BIOQUIZ.html')">🧬 Bio Quiz</button>
+<button onclick="openExternal('genesisv1.html')">⚡ Genesis</button>
+<button onclick="openExternal('researchviz.html')">🤖 Research Visualization</button>
+<button onclick="openExternal('game.html')">👁️ Horror Game</button>
+
+<button onclick="openPage('future')">Next</button>
+</div>
+</div>
+
+<!-- ================= FUTURE ================= -->
+<div class="page" id="future">
+<div class="card">
+<h2>Future Goals</h2>
+<p>
+Bioinformatics → Computational Biology → Scientific Research Systems<br><br>
+Focused on genetics, disease modeling, and AI biology integration.
+</p>
+
+<button onclick="openPage('home')">Restart</button>
+</div>
+</div>
+
+<script>
+
+/* ================= AUDIO FIX ================= */
+let started=false;
+
+function startAudio(){
+if(started) return;
+document.getElementById("bgm").play().catch(()=>{});
+started=true;
+}
+
+window.addEventListener("click",startAudio,{once:true});
+
+/* ================= PAGE SYSTEM ================= */
+function openPage(id){
+startAudio();
+
+document.querySelectorAll(".page").forEach(p=>{
+p.classList.remove("active");
+});
+
+document.getElementById(id).classList.add("active");
+}
+
+/* ================= EXTERNAL PROJECTS ================= */
+function openExternal(file){
+startAudio();
+
+/* IMPORTANT FIX: works only if file exists in SAME folder */
+window.location.href = file;
+}
+
 </script>
 
 </body>
