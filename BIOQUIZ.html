@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎀 Biology Quiz 🧬</title>
+
+<style>
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    font-family: "Trebuchet MS", sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow:hidden;
+
+    background: linear-gradient(
+    135deg,
+    #ffd6e8,
+    #e7d4ff,
+    #d6f5ff
+    );
+}
+
+/* Floating decorations */
+
+.sparkle{
+    position:absolute;
+    font-size:30px;
+    animation:float 6s infinite ease-in-out;
+}
+
+.s1{top:10%;left:10%;}
+.s2{top:20%;right:15%;}
+.s3{bottom:15%;left:15%;}
+.s4{bottom:10%;right:10%;}
+.s5{top:50%;left:5%;}
+
+@keyframes float{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-20px);}
+}
+
+/* Card */
+
+.quiz-box{
+    width:750px;
+    max-width:90%;
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(12px);
+
+    padding:35px;
+    border-radius:30px;
+
+    text-align:center;
+
+    box-shadow:0 8px 30px rgba(0,0,0,0.15);
+
+    animation:cardFloat 4s infinite ease-in-out;
+}
+
+@keyframes cardFloat{
+    0%,100%{transform:translateY(0);}
+    50%{transform:translateY(-10px);}
+}
+
+h1{
+    color:#ff69b4;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    color:#7a5cff;
+    margin-bottom:20px;
+    font-weight:bold;
+}
+
+#question{
+    margin:20px 0;
+    color:#444;
+}
+
+button{
+    width:100%;
+    padding:14px;
+    margin:8px 0;
+
+    border:none;
+    border-radius:20px;
+
+    background:#ffe4f2;
+
+    font-size:16px;
+    cursor:pointer;
+
+    transition:0.3s;
+}
+
+button:hover{
+    transform:scale(1.03);
+    background:#ffd0e8;
+}
+
+#result{
+    margin-top:15px;
+    font-size:18px;
+    font-weight:bold;
+}
+
+#score{
+    margin-top:10px;
+    color:#7a5cff;
+    font-size:18px;
+}
+
+.quote{
+    margin-top:20px;
+    color:#777;
+    font-style:italic;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="sparkle s1">🌸</div>
+<div class="sparkle s2">🎀</div>
+<div class="sparkle s3">✨</div>
+<div class="sparkle s4">🧸</div>
+<div class="sparkle s5">🧬</div>
+
+<div class="quiz-box">
+
+<h1>🎀 Bio Quiz Edition 🧬</h1>
+
+<p class="subtitle">
+🌸 Study Biology The Cute Way 🌸
+</p>
+
+<h2 id="question"></h2>
+
+<button id="btn1" onclick="checkAnswer('a')"></button>
+<button id="btn2" onclick="checkAnswer('b')"></button>
+<button id="btn3" onclick="checkAnswer('c')"></button>
+<button id="btn4" onclick="checkAnswer('d')"></button>
+
+<p id="result"></p>
+<p id="score">⭐ Score: 0</p>
+
+<p class="quote">
+🐰 Future Nobel Prize Winner Loading...
+</p>
+
+</div>
+
+<script>
+
+let currentQuestion = 0;
+let score = 0;
+
+const questions = [
+
+{
+question:"🧬 Which enzyme is used in PCR?",
+options:[
+"DNA Ligase",
+"Taq Polymerase",
+"Amylase",
+"Pepsin"
+],
+correct:"b"
+},
+
+{
+question:"🌱 Who is known as the Father of Genetics?",
+options:[
+"Darwin",
+"Mendel",
+"Watson",
+"Pasteur"
+],
+correct:"b"
+},
+
+{
+question:"💖 DNA stands for?",
+options:[
+"Deoxyribonucleic Acid",
+"Dinucleic Acid",
+"Double Nuclear Acid",
+"Deoxy Nitrogen Acid"
+],
+correct:"a"
+},
+
+{
+question:"🌸 Which vector is commonly used in genetic engineering?",
+options:[
+"Plasmid",
+"Ribosome",
+"Mitochondria",
+"Chloroplast"
+],
+correct:"a"
+},
+
+{
+question:"✨ Powerhouse of the cell?",
+options:[
+"Nucleus",
+"Ribosome",
+"Mitochondria",
+"Cell Wall"
+],
+correct:"c"
+}
+
+];
+
+function loadQuestion(){
+
+document.getElementById("question").innerText =
+questions[currentQuestion].question;
+
+document.getElementById("btn1").innerText =
+questions[currentQuestion].options[0];
+
+document.getElementById("btn2").innerText =
+questions[currentQuestion].options[1];
+
+document.getElementById("btn3").innerText =
+questions[currentQuestion].options[2];
+
+document.getElementById("btn4").innerText =
+questions[currentQuestion].options[3];
+
+}
+
+function checkAnswer(answer){
+
+if(answer === questions[currentQuestion].correct){
+
+score++;
+
+document.getElementById("result").innerHTML =
+"🌸 Slay! Tiny Scientist Approved! ✨";
+
+}
+else{
+
+document.getElementById("result").innerHTML =
+"🥺 Oopsie! The mitochondria are disappointed.";
+
+}
+
+document.getElementById("score").innerHTML =
+"⭐ Score: " + score;
+
+currentQuestion++;
+
+if(currentQuestion < questions.length){
+
+setTimeout(() => {
+
+document.getElementById("result").innerHTML = "";
+loadQuestion();
+
+},1200);
+
+}
+else{
+
+setTimeout(() => {
+
+document.querySelector(".quiz-box").innerHTML =
+
+"<h1>🎉 Quiz Complete! 🎀</h1>" +
+
+"<h2>🌟 Final Score: " +
+score +
+" / " +
+questions.length +
+"</h2>" +
+
+"<br><p style='font-size:22px;'>🧬 Scientist Level Unlocked 🧬</p>" +
+
+"<br><p>🌸 Keep going, future bioinformatics queen! ✨</p>" +
+
+"<br><p>🎀 Powered by curiosity, caffeine and questionable sleep schedules.</p>";
+
+},1200);
+
+}
+
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
