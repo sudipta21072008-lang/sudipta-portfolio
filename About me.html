@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sudipta's Website</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .card {
+            background: white;
+            width: 80%;
+            max-width: 700px;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        h1 {
+            color: #4f46e5;
+            font-size: 3rem;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        h1:hover {
+            transform: scale(1.05);
+        }
+
+        #typing {
+            font-size: 1.2rem;
+            color: #666;
+            font-weight: bold;
+            min-height: 30px;
+        }
+
+        .tagline {
+            color: gray;
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            color: #222;
+            margin-top: 25px;
+        }
+
+        p {
+            color: #444;
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            background: #f4f4f4;
+            margin: 10px auto;
+            padding: 12px;
+            border-radius: 10px;
+            max-width: 250px;
+        }
+
+        .quote {
+            margin-top: 30px;
+            font-style: italic;
+            color: #666;
+        }
+
+        button {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            transform: scale(1.05);
+        }
+
+        .contact {
+            margin-top: 25px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="card">
+
+        <h1 id="title">Sudipta 👋</h1>
+
+        <p id="typing"></p>
+
+        <p class="tagline">
+            Future Scientist | Bioinformatics & Computational Biology
+        </p>
+
+        <p>📍 India</p>
+        <p>🧬 Aspiring Bioinformatics & Computational Biology Scientist</p>
+        <p>🎓 Future Researcher</p>
+
+        <h2>About Me</h2>
+
+        <p>
+            I'm passionate about science, research, and technology.
+            My goal is to become a scientist in Bioinformatics or
+            Computational Biology and contribute to groundbreaking discoveries.
+        </p>
+
+        <h2>Things I Enjoy</h2>
+
+        <ul>
+            <li>🎸 Playing Guitar</li>
+            <li>🍳 Cooking</li>
+            <li>📚 Reading Books</li>
+        </ul>
+
+        <p class="quote">
+            "Future scientist. Current professional overthinker."
+        </p>
+
+        <div class="contact">
+            <h2>Contact Me</h2>
+
+            <p>📧 sudipta21072008@gmail.com</p>
+
+            <a href="mailto:sudipta21072008@gmail.com">
+                <button>Send Email 📧</button>
+            </a>
+        </div>
+
+    </div>
+
+    <script>
+        const title = document.getElementById("title");
+
+        title.addEventListener("click", () => {
+            title.innerText = "Scientist Loading... 🧬";
+        });
+
+        const text = "Aspiring Scientist 🧬";
+        let i = 0;
+
+        function typeWriter() {
+            if (i < text.length) {
+                document.getElementById("typing").innerHTML += text.charAt(i);
+                i++;
+                setTimeout(typeWriter, 100);
+            }
+        }
+
+        typeWriter();
+    </script>
+
+</body>
+
+</html>
