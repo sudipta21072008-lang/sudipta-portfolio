@@ -1,0 +1,578 @@
+!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GENESIS-X</title>
+
+<style>
+    .sidepanel{
+position:absolute;
+left:20px;
+top:20px;
+width:220px;
+display:flex;
+flex-direction:column;
+gap:15px;
+z-index:10;
+}
+#bg{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:-2;
+}
+
+.flash{
+animation:flashAnim 0.3s;
+}
+
+@keyframes flashAnim{
+0%{background:#050816;}
+50%{background:#0f1c3f;}
+100%{background:#050816;}
+}
+
+.right{
+background:rgba(0,0,0,0.4);
+backdrop-filter:blur(20px);
+border-left:1px solid rgba(0,229,255,0.2);
+}
+
+.quote{
+background:rgba(255,255,255,0.05);
+padding:10px;
+border-radius:10px;
+font-size:12px;
+color:#dbeafe;
+border:1px solid rgba(0,229,255,0.2);
+backdrop-filter:blur(8px);
+animation:fadeIn 2s ease-in-out infinite alternate;
+}
+
+@keyframes fadeIn{
+0%{opacity:0.6;}
+100%{opacity:1;}
+}
+
+.gifbox img{
+width:100%;
+border-radius:10px;
+border:1px solid rgba(0,229,255,0.2);
+}
+
+.stickers{
+font-size:22px;
+text-align:center;
+animation:float 3s infinite ease-in-out;
+}
+
+@keyframes float{
+0%{transform:translateY(0px);}
+50%{transform:translateY(-8px);}
+100%{transform:translateY(0px);}
+}
+    .grid{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background-image:
+linear-gradient(rgba(0,255,255,0.05) 1px, transparent 1px),
+linear-gradient(90deg, rgba(0,255,255,0.05) 1px, transparent 1px);
+background-size:40px 40px;
+animation:moveGrid 10s linear infinite;
+z-index:-1;
+}
+
+@keyframes moveGrid{
+0%{transform:translate(0,0);}
+100%{transform:translate(40px,40px);}
+}
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+background:#050816;
+font-family:Arial,sans-serif;
+color:white;
+overflow-x:hidden;
+overflow-y:auto;
+}
+.container{
+display:grid;
+grid-template-columns:2fr 1fr;
+height:100vh;
+}
+
+/* LEFT DNA VISUAL */
+.left{
+position:relative;
+display:flex;
+justify-content:center;
+align-items:center;
+}
+/* RIGHT PANEL */
+.right{
+padding:25px;
+display:flex;
+flex-direction:column;
+gap:12px;
+}
+h1{
+color:#00e5ff;
+margin-bottom:5px;
+}
+
+<div class="value">
+Level: <span id="level">1</span>
+</div>
+
+<div class="value">
+XP: <span id="xp">0</span> / 100
+</div>
+
+<div class="value">
+Score: <span id="score">0</span>
+</div>
+
+</div>
+
+.subtitle{
+color:#8aa2ff;
+margin-bottom:15px;
+}
+
+/* INPUT */
+textarea{
+width:100%;
+height:80px;
+background:#0d1328;
+color:#00e5ff;
+border:none;
+border-radius:10px;
+padding:10px;
+margin-top:10px;
+}
+
+/* BUTTONS */
+button{
+width:100%;
+padding:12px;
+margin-top:8px;
+border:none;
+border-radius:10px;
+cursor:pointer;
+font-size:14px;
+background:linear-gradient(90deg,#00e5ff,#7c4dff);
+color:white;
+transition:0.2s;
+}
+
+button:hover{
+transform:scale(1.02);
+}
+
+/* CARDS */
+.card{
+margin-top:15px;
+padding:12px;
+background:rgba(255,255,255,0.04);
+border-radius:10px;
+animation:pulse 3s infinite;
+border:1px solid rgba(0,229,255,0.1);
+}
+
+.label{
+color:#00e5ff;
+margin-bottom:5px;
+}
+
+.value{
+color:#dbeafe;
+}
+
+.glow{
+text-shadow:0 0 10px #00e5ff;
+}
+
+/* STATUS */
+.status{
+font-size:50px;
+text-align:center;
+margin-top:10px;
+}
+
+/* CANVAS */
+canvas{
+width:100%;
+height:100%;
+}
+@keyframes pulse{
+0%{box-shadow:0 0 5px #00e5ff;}
+50%{box-shadow:0 0 25px #00e5ff;}
+100%{box-shadow:0 0 5px #00e5ff;}
+}
+</style>
+</head>
+
+<body>
+    <canvas id="bg"></canvas>
+    <div class="grid"></div>
+<div class="container">
+
+<div class="left">
+
+<div class="sidepanel">
+
+<div class="quote" id="quoteBox">
+“Science is a way of thinking much more than it is a body of knowledge.”  
+— Carl Sagan
+</div>
+
+<div class="gifbox">
+<img src="https://media.giphy.com/media/l0HlNaQ6gWfllcjDO/giphy.gif">
+</div>
+
+<div class="stickers">
+🧬 ⚡ 🔬 🧫 🧠
+</div>
+
+</div>
+
+<canvas id="dnaCanvas"></canvas>
+
+</div>
+
+<div class="right">
+<div class="card">
+<div class="label">🧬 GENESIS GAME MODE</div>
+
+<div class="value">Level: <span id="level">1</span></div>
+<div class="value">XP: <span id="xp">0</span> / 100</div>
+<div class="value">Score: <span id="score">0</span></div>
+</div>
+<h1>🧬 GENESIS-X</h1>
+<p class="subtitle">Genome Engineering Simulator</p>
+
+<div class="card">
+<div class="label">DNA Sequence</div>
+<textarea id="dnaInput">ATCGATCGATCGATCG</textarea>
+</div>
+
+<div class="card">
+<div class="label">Genome Tools</div>
+
+<button onclick="substitutionMutation()">⚡ Substitution</button>
+<button onclick="insertionMutation()">➕ Insertion</button>
+<button onclick="deletionMutation()">✂️ Deletion</button>
+
+</div>
+
+<div class="card">
+<div class="label">Mutation Count</div>
+<div class="value" id="mutations">0</div>
+</div>
+
+<div class="card">
+<div class="label">GC Content</div>
+<div class="value" id="gc">50%</div>
+</div>
+
+<div class="card">
+<div class="label">Base Composition</div>
+<div class="value" id="baseStats">A:0 T:0 C:0 G:0</div>
+</div>
+
+<div class="card">
+<div class="label">Genome Stability</div>
+<div class="value" id="stability">100%</div>
+</div>
+
+<div class="card">
+<div class="label">Mutation History</div>
+<div id="history">No mutations yet.</div>
+</div>
+
+<div class="status" id="lifeform">🧫</div>
+<div class="value glow" id="stage" style="text-align:center;">Cell Culture</div>
+
+</div>
+
+</div>
+
+<script>
+
+const canvas = document.getElementById("dnaCanvas");
+const ctx = canvas.getContext("2d");
+
+let t = 0;
+
+/* GAME VARIABLES */
+let mutationCount = 0;
+let history = [];
+
+let xp = 0;
+let level = 1;
+let score = 0;
+
+/* XP SYSTEM */
+function addXP(amount){
+
+xp += amount;
+score += amount;
+
+if(xp >= 100){
+xp -= 100;
+level++;
+}
+
+document.getElementById("xp").innerText = xp;
+document.getElementById("level").innerText = level;
+document.getElementById("score").innerText = score;
+}
+
+/* DNA RESIZE */
+function resize(){
+canvas.width = window.innerWidth * 0.65;
+canvas.height = window.innerHeight;
+}
+resize();
+window.addEventListener("resize", resize);
+
+/* DNA DRAW */
+function drawDNA(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+for(let y=0; y<canvas.height; y+=14){
+
+let wave = Math.sin((y+t)/30)*120;
+
+let x1 = canvas.width/2 + wave;
+let x2 = canvas.width/2 - wave;
+
+/* line */
+ctx.beginPath();
+ctx.moveTo(x1,y);
+ctx.lineTo(x2,y);
+
+ctx.strokeStyle = "rgba(0,229,255,0.9)";
+ctx.shadowBlur = 25;
+ctx.shadowColor = "#00e5ff";
+ctx.lineWidth = 2;
+ctx.stroke();
+
+/* bases */
+ctx.shadowBlur = 15;
+
+/* left */
+ctx.fillStyle = "#00e5ff";
+ctx.beginPath();
+ctx.arc(x1,y,4,0,Math.PI*2);
+ctx.fill();
+
+/* right */
+ctx.fillStyle = "#7c4dff";
+ctx.beginPath();
+ctx.arc(x2,y,4,0,Math.PI*2);
+ctx.fill();
+
+}
+
+t += 0.08;
+requestAnimationFrame(drawDNA);
+}
+drawDNA();
+
+/* STATS */
+function updateStats(dna){
+
+let A=0,T=0,C=0,G=0;
+
+for(let b of dna){
+if(b==="A") A++;
+if(b==="T") T++;
+if(b==="C") C++;
+if(b==="G") G++;
+}
+
+let gc = ((G+C)/dna.length*100).toFixed(1);
+
+document.getElementById("gc").innerText = gc + "%";
+document.getElementById("baseStats").innerText =
+"A:" + A + " T:" + T + " C:" + C + " G:" + G;
+}
+
+/* HISTORY */
+function addHistory(type,dna){
+history.unshift(type + " → " + dna);
+
+document.getElementById("history").innerHTML =
+history.map(h => "<div>🧬 " + h + "</div>").join("<hr>");
+}
+
+/* EVOLUTION */
+function updateEvolution(){
+
+let life = document.getElementById("lifeform");
+let stage = document.getElementById("stage");
+
+if(level <= 2){
+life.innerText="🧫";
+stage.innerText="Cell Stage";
+}
+else if(level <= 4){
+life.innerText="🌱";
+stage.innerText="Growing Organism";
+}
+else if(level <= 6){
+life.innerText="🦎";
+stage.innerText="Adaptive Species";
+}
+else if(level <= 8){
+life.innerText="🧠";
+stage.innerText="High Intelligence";
+}
+else{
+life.innerText="👽";
+stage.innerText="Synthetic Lifeform";
+}
+}
+
+/* MUTATION APPLY */
+function applyMutation(dna,type){
+
+addXP(10);
+
+document.body.classList.add("flash");
+setTimeout(()=>document.body.classList.remove("flash"),300);
+
+document.getElementById("dnaInput").value = dna;
+
+mutationCount++;
+
+document.getElementById("mutations").innerText = mutationCount;
+
+let stability = Math.max(20, 100 - mutationCount*5);
+canvas.style.opacity = stability / 100;
+
+document.getElementById("stability").innerText = stability + "%";
+
+updateStats(dna);
+addHistory(type,dna);
+updateEvolution();
+}
+
+/* MUTATIONS */
+function substitutionMutation(){
+
+let dna = document.getElementById("dnaInput").value.toUpperCase().replace(/[^ATCG]/g,"");
+if(!dna) return;
+
+const bases=["A","T","C","G"];
+
+let pos = Math.floor(Math.random()*dna.length);
+
+let newBase = dna[pos];
+while(newBase === dna[pos]){
+newBase = bases[Math.floor(Math.random()*4)];
+}
+
+dna = dna.substring(0,pos) + newBase + dna.substring(pos+1);
+
+applyMutation(dna,"Substitution");
+}
+
+function insertionMutation(){
+
+let dna = document.getElementById("dnaInput").value.toUpperCase().replace(/[^ATCG]/g,"");
+if(!dna) return;
+
+const bases=["A","T","C","G"];
+
+let pos = Math.floor(Math.random()*dna.length);
+let base = bases[Math.floor(Math.random()*4)];
+
+dna = dna.substring(0,pos) + base + dna.substring(pos);
+
+applyMutation(dna,"Insertion");
+}
+
+function deletionMutation(){
+
+let dna = document.getElementById("dnaInput").value.toUpperCase().replace(/[^ATCG]/g,"");
+if(dna.length <= 1) return;
+
+let pos = Math.floor(Math.random()*dna.length);
+
+dna = dna.substring(0,pos) + dna.substring(pos+1);
+
+applyMutation(dna,"Deletion");
+}
+
+/* QUOTES */
+const quotes = [
+"Science is thinking. — Carl Sagan",
+"DNA is software of life. — Bill Gates",
+"Truth exists whether you believe it. — Neil deGrasse Tyson",
+"Biology is ultimate technology. — Craig Venter"
+];
+
+let qIndex = 0;
+
+setInterval(()=>{
+qIndex = (qIndex + 1) % quotes.length;
+document.getElementById("quoteBox").innerText = quotes[qIndex];
+},4000);
+
+/* BACKGROUND PARTICLES */
+const bg = document.getElementById("bg");
+const bctx = bg.getContext("2d");
+
+bg.width = window.innerWidth;
+bg.height = window.innerHeight;
+
+let particles = [];
+
+for(let i=0;i<80;i++){
+particles.push({
+x:Math.random()*bg.width,
+y:Math.random()*bg.height,
+r:Math.random()*2,
+dx:(Math.random()-0.5)*0.5,
+dy:(Math.random()-0.5)*0.5
+});
+}
+
+function animateBG(){
+bctx.clearRect(0,0,bg.width,bg.height);
+
+for(let p of particles){
+p.x += p.dx;
+p.y += p.dy;
+
+if(p.x<0||p.x>bg.width) p.dx*=-1;
+if(p.y<0||p.y>bg.height) p.dy*=-1;
+
+bctx.beginPath();
+bctx.arc(p.x,p.y,p.r,0,Math.PI*2);
+bctx.fillStyle="rgba(0,229,255,0.5)";
+bctx.fill();
+}
+
+requestAnimationFrame(animateBG);
+}
+
+animateBG();
+
+</script>
+
+</body>
+</html>
