@@ -7,11 +7,30 @@
 <title>Sudipta | Portfolio</title>
 
 <style>
+/* THEME VARIABLES */
+:root {
+    --bg: linear-gradient(135deg, #667eea, #764ba2);
+    --card: white;
+    --text: black;
+    --nav: rgba(0,0,0,0.3);
+    --btn: #4f46e5;
+}
+
+/* DARK MODE */
+.dark {
+    --bg: #0f172a;
+    --card: #1e293b;
+    --text: white;
+    --nav: rgba(255,255,255,0.1);
+    --btn: #6366f1;
+}
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
+    background: var(--bg);
+    color: var(--text);
+    transition: 0.3s;
 }
 
 /* NAVBAR */
@@ -20,9 +39,10 @@ nav {
     justify-content: center;
     gap: 20px;
     padding: 15px;
-    background: rgba(0,0,0,0.3);
+    background: var(--nav);
     position: sticky;
     top: 0;
+    align-items: center;
 }
 
 nav a {
@@ -39,35 +59,43 @@ section {
 
 /* CARD */
 .card {
-    background: white;
-    color: black;
+    background: var(--card);
+    color: var(--text);
     max-width: 700px;
     margin: auto;
     padding: 30px;
     border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
 }
 
-/* PROJECT BOX */
+/* PROJECT */
 .project {
-    background: #f4f4f4;
+    background: var(--card);
     padding: 15px;
     margin: 10px auto;
-    border-radius: 10px;
+    border-radius: 12px;
     max-width: 400px;
-    color: black;
 }
 
+/* BUTTON */
 button {
-    background: #4f46e5;
+    background: var(--btn);
     color: white;
     border: none;
     padding: 10px 15px;
     border-radius: 8px;
     cursor: pointer;
+    transition: 0.3s;
 }
 
 button:hover {
     transform: scale(1.05);
+}
+
+/* DARK MODE BUTTON */
+.toggle {
+    position: absolute;
+    right: 20px;
 }
 </style>
 
@@ -75,12 +103,14 @@ button:hover {
 
 <body>
 
-<!-- NAVBAR -->
+<!-- NAV -->
 <nav>
     <a href="#home">Home</a>
     <a href="#about">About</a>
     <a href="#projects">Projects</a>
     <a href="#contact">Contact</a>
+
+    <button class="toggle" onclick="toggleDark()">🌙</button>
 </nav>
 
 <!-- HOME -->
@@ -124,6 +154,12 @@ button:hover {
         <button>Send Email</button>
     </a>
 </section>
+
+<script>
+function toggleDark() {
+    document.body.classList.toggle("dark");
+}
+</script>
 
 </body>
 </html>
